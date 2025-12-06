@@ -1,0 +1,35 @@
+# ---- Node ----
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---- Environment ----
+.env
+backend/.env
+frontend/.env
+
+# ---- Docker ----
+mysql/
+tpentornos_db_data/
+*.pid
+
+# ---- Editor / OS ----
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---- Builds ----
+dist/
+build/
+frontend/dist/
+backend/dist/
+
+# ---- Cache ----
+*.cache
+.cache/

@@ -1,58 +1,68 @@
-
 services:
-  backend:
-    build: ./backend
-    container_name: tp-backend
-    restart: always
-    ports:
-      - "${BACKEND_PORT}:3000"
-    environment:
-      - DB_HOST=db
-      - DB_USER=benja
-      - DB_PASSWORD=280519.Benjamin
-      - DB_NAME=entornos
-    depends_on:
-      - db
-    networks:
-      - tp-net
-
   db:
     image: mysql:8.0
     container_name: tp-mysql
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=280519.Benjamin
-      - MYSQL_DATABASE=entornos
-      - MYSQL_USER=benja
-      - MYSQL_PASSWORD=280519.Benjamin
+      MYSQL_ROOT_PASSWORD: 280519.Benjamin
+      MYSQL_DATABASE: entornos
+      MYSQL_USER: benja
+      MYSQL_PASSWORD: 280519.Benjamin
     ports:
-      - "3306:3306"
+      - "3310:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
     networks:
-      - tp-net
+      - tpentornos-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   metabase:
-    image: metabase/metabase:latest
+    image: metabase/metabase
     container_name: tp-metabase
-    restart: always
+    environment:
+      MB_DB_TYPE: mysql
+      MB_DB_DBNAME: entornos
+      MB_DB_PORT: 3306
+      MB_DB_USER: benja
+      MB_DB_PASS: 280519.Benjamin
+      MB_DB_HOST: db
     ports:
       - "3001:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
-      - tp-net
-    # Opcional: para usar Postgre o MySQL como backend de Metabase
-    environment:
-      - MB_DB_TYPE=mysql
-      - MB_DB_DBNAME=entornos
-      - MB_DB_PORT=3306
-      - MB_DB_USER=benja
-      - MB_DB_PASS=280519.Benjamin
-      - MB_DB_HOST=db
+      - tpentornos-network
 
-volumes:
-  mysql_data:
+  backend:
+    build: ./backend
+    container_name: tp-backend
+    environment:
+      BACKEND_PORT: 3000
+      DB_USER: benja
+      DB_PASSWORD: 280519.Benjamin
+      DB_NAME: entornos
+      DB_HOST: db
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      metabase:
+        condition: service_started
+    networks:
+      - tpentornos-network
+    volumes:
+      - ./wait:/scripts
+    entrypoint: ["node", "wait-metabase.js"]
 
 networks:
-  tp-net:
+  tpentornos-network:
+
+volumes:
+  tpentornos_db_data:

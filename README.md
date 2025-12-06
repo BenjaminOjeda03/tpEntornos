@@ -1,71 +1,86 @@
-# Mini Plataforma Web con Docker Compose
+✔️ 1. Requisitos previos
 
-## 🚀 Servicios incluidos
-- **Backend (Node.js + Express)** — API REST para gestionar tareas.
-- **MySQL** — Base de datos con persistencia en volumen.
-- **Metabase** — Dashboard opcional para visualizar datos.
+Docker Desktop instalado
 
----
+No es necesario instalar Node.js ni MySQL localmente
 
-## 🐳 Puesta en marcha
+Proyecto descargado o clonado
 
-### 1. Clonar el proyecto
-git clone <repo>
+✔️ 2. Levantar el proyecto
 
-### 2. Crear archivo `.env`
-Copiar el siguiente contenido:
+Ejecutar en la carpeta raíz:
 
-BACKEND_PORT=3000
-MYSQL_ROOT_PASSWORD=root123
-MYSQL_DATABASE=tareasdb
-MYSQL_USER=user
-MYSQL_PASSWORD=user123
+docker-compose up -d --build
 
-### 3. Levantar servicios
-docker compose up -d
+✔️ 3. Probar el backend
 
-### 4. Endpoints disponibles
+Abrir:
 
-| Método | Ruta | Descripción |
-|-------|-------|--------------|
-| GET | `/` | Prueba de vida |
-| GET | `/tareas` | Lista todas las tareas |
-| POST | `/tareas` | Crea una tarea |
+👉 http://localhost:3000
 
-Ejemplo para crear una tarea:
+Debe mostrar:
 
-```json
-POST http://localhost:3000/tareas
-{
-  "titulo": "Comprar insumos",
-  "estado": "ToDo"
-}
+API funcionando
 
-## 5. Documento de decisiones tecnológicas**
+✔️ 4. Probar el frontend
 
-## 📌 Backend → Node.js + Express
-- Express es liviano, rápido para prototipos y fácil de dockerizar.  
-- Amplia comunidad y soporte.  
-- Buen manejo de JSON y APIs REST.
+Abrir:
 
-## 📌 Base de datos → MySQL
-- Imagen oficial estable y ampliamente usada en producción.  
-- Soporte para volúmenes persistentes.  
-- Compatible con Metabase para dashboards.
+👉 http://localhost:3002
 
-## 📌 Metabase (opcional)
-- Permite visualizar y consultar datos sin programar.  
-- Útil para reportes internos de la pyme.  
-- Se levanta con una sola imagen Docker.
+Verificar:
 
-## 📌 Docker Compose
-- Permite levantar todos los servicios con un solo comando.  
-- Manejo simple de redes, variables y volúmenes.  
-- Ideal para entorno educativo y prototipos.
+Crear una tarea
 
----
+Listar tareas
 
-# ✅ **6. Endpoint de prueba para Postman**
+Comunicación correcta con el backend
 
-### **POST – Crear tarea**
-URL:
+✔️ 5. Acceder a Metabase
+
+Abrir:
+
+👉 http://localhost:3001
+
+Verificar:
+
+Conexión a la base de datos
+
+Visualización de la tabla tareas
+
+Creación de un gráfico simple
+
+✔️ 6. Comprobar base de datos MySQL
+docker exec -it tp-mysql mysql -u benja -p
+
+
+Clave: 280519.Benjamin
+
+Luego:
+
+USE entornos;
+SELECT * FROM tareas;
+
+
+Las tareas creadas desde el frontend deben aparecer aquí.
+
+✔️ 7. Finalizar la corrección
+docker-compose down -v
+
+✔️ 8. Objetivo pedagógico demostrado
+
+Este proyecto demuestra:
+
+Manejo de Docker Compose
+
+Comunicación entre contenedores
+
+API REST en Node.js
+
+Persistencia en MySQL
+
+Integración full stack (Frontend + Backend + DB)
+
+Uso de Metabase para análisis de datos
+
+Manejo de healthchecks y scripts de readiness

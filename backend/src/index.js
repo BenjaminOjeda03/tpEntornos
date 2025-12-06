@@ -5,13 +5,20 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 
-// Conexión a MySQL usando variables de entorno
+const cors = require("cors");
+
+app.use(cors({
+  origin: "http://localhost:3002" // aquí va el puerto donde corre tu frontend
+}));
+
+// Conexión a MySQL usando variables de entorno CORRECTAS
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || "db",
-  user: process.env.DB_USER || "benja",
-  password: process.env.MYSQL_PASSWORD || "280519.Benjamin",
-  database: process.env.MYSQL_DATABASE || "entornos"
+  host: process.env.DB_HOST,      // "db"
+  user: process.env.DB_USER,      // "benja"
+  password: process.env.DB_PASSWORD, // "280519.Benjamin"
+  database: process.env.DB_NAME   // "entornos"
 });
+
 
 // Conectarse a MySQL
 db.connect(err => {
